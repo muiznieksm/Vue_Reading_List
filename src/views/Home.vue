@@ -3,8 +3,8 @@
     <ul>
       <li v-for="book in books" :key="book.id">
         <div class="details">
-          <h3>{{ book.title }}</h3>
-          <p>By {{ book.author }}</p>
+          <h3>{{ book.Title }}</h3>
+          <p>By {{ book.Author }}</p>
         </div>
         <div class="icon">
           <span class="material-icons">favorite</span>
@@ -16,21 +16,31 @@
 </template>
 
 <script>
-import { ref } from 'vue'
-import CreateBookForm from '@/components/CreateBookForm'
+import { ref } from "vue";
+import CreateBookForm from "@/components/CreateBookForm";
+import { db } from "../firebase/config";
+import { collection, getDocs } from "firebase/firestore";
+
 
 export default {
-  name: 'Home',
+  name: "Home",
   components: { CreateBookForm },
   setup() {
-    const books = ref([
-      { title: 'name of the wind', author: 'patrick rothfuss', isFav: false, id: '1' },
-      { title: 'the way of kings', author: 'brandon sanderson', isfav: false, id: '2' }
-    ])
+    const books = ref([]);
 
-    return { books }
-  }
-}
+    const colRef = collection(db, 'books')
+    getDocs(colRef)
+    .then(snapshot => {
+      let docs = []
+      snapshot.docs.forEach(doc => {
+        docs.push({...doc.data(), id: doc.id})
+      })
+      books.value = docs
+    })
+
+    return { books };
+  },
+};
 </script>
 
 <style>
