@@ -6,7 +6,10 @@
           <h3 @click="handleDelete(book)">{{ book.Title }}</h3>
           <p>By {{ book.Author }}</p>
         </div>
-        <div :class="{icon: true, fav: book.isFav}" @click="handleUpdate(book)" >
+        <div
+          :class="{ icon: true, fav: book.isFav }"
+          @click="handleUpdate(book)"
+        >
           <span class="material-icons">favorite</span>
         </div>
       </li>
@@ -20,12 +23,18 @@ import CreateBookForm from "@/components/CreateBookForm";
 import getCollection from "../composables/getCollection";
 import { db } from "@/firebase/config";
 import { deleteDoc, doc, updateDoc } from "firebase/firestore";
+import getUser from "../composables/getUser";
 
 export default {
   name: "Home",
   components: { CreateBookForm },
   setup() {
-    const { documents: books } = getCollection("books");
+    const { user } = getUser();
+    const { documents: books } = getCollection("books", [
+      "userUid",
+      "==",
+      user.value.uid,
+    ]);
 
     const handleDelete = (book) => {
       const docRef = doc(db, "books", book.id);

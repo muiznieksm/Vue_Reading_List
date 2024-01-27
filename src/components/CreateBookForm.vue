@@ -13,12 +13,14 @@
 </template>
 
 <script>
+import getUser from "@/composables/getUser";
 import { db } from "@/firebase/config";
 import { addDoc, collection } from "firebase/firestore";
 import { ref } from "vue";
 
 export default {
   setup() {
+    const { user } = getUser();
     const title = ref("");
     const author = ref("");
 
@@ -28,6 +30,7 @@ export default {
         Title: title.value,
         Author: author.value,
         isFave: false,
+        userUid: user.value.uid,
       });
       title.value = "";
       author.value = "";
