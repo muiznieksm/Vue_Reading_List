@@ -3,7 +3,7 @@
     <ul>
       <li v-for="book in books" :key="book.id">
         <div class="details">
-          <h3>{{ book.Title }}</h3>
+          <h3 @click="handleDelete(book)">{{ book.Title }}</h3>
           <p>By {{ book.Author }}</p>
         </div>
         <div class="icon">
@@ -18,6 +18,8 @@
 <script>
 import CreateBookForm from "@/components/CreateBookForm";
 import getCollection from "../composables/getCollection";
+import { db } from "@/firebase/config";
+import { deleteDoc, doc } from "firebase/firestore";
 
 export default {
   name: "Home",
@@ -25,7 +27,13 @@ export default {
   setup() {
     const { documents: books } = getCollection("books");
 
-    return { books };
+    const handleDelete = (book) => {
+      const docRef = doc(db, "books", book.id);
+
+      deleteDoc(docRef);
+    };
+
+    return { books, handleDelete };
   },
 };
 </script>
