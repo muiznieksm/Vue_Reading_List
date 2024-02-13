@@ -46,9 +46,3 @@ Use `npm run serve` to start a local development server. Access the application 
 ## Building for Production
 
 To create a production build, use `npm run build`. Deploy the `dist/` folder to your preferred hosting service.
-
-## Best Practices
-
-- Keep components small and focused to improve readability and maintainability.
-- Use Vue's reactivity system effectively to manage application state.
-- Secure your Firebase services with appropriate rules.
